@@ -81,15 +81,18 @@ var app = app || {};
     })
   };
 
-// COMMENT: What is the purpose of this method?
+  // COMMENT-DONE: What is the purpose of this method?
+  // This is where the search form functionality lives. Users can enter data into form and the function takes that data and calls the find function in Book that searches and loads search results
   bookView.initSearchFormPage = function() {
     resetView();
     $('.search-view').show();
     $('#search-form').on('submit', function(event) {
-      // COMMENT: What default behavior is being prevented here?
+      // COMMENT-DONE: What default behavior is being prevented here?
+      // Default behavior of forms is to reload page on submission
       event.preventDefault();
 
-      // COMMENT: What is the event.target, below? What will happen if the user does not provide the information needed for the title, author, or isbn properties?
+      // COMMENT-DONE: What is the event.target, below? What will happen if the user does not provide the information needed for the title, author, or isbn properties?
+      // If user does not search for all fields, the value of the property is set to an empty string
       let book = {
         title: event.target.title.value || '',
         author: event.target.author.value || '',
@@ -98,31 +101,37 @@ var app = app || {};
 
       module.Book.find(book, bookView.initSearchResultsPage);
 
-      // COMMENT: Why are these values set to an empty string?
+      // COMMENT-DONE: Why are these values set to an empty string?
+      // Values are reset? not sure without testing
       event.target.title.value = '';
       event.target.author.value = '';
       event.target.isbn.value = '';
     })
   }
 
-  // COMMENT: What is the purpose of this method?
+  // COMMENT-DONE: What is the purpose of this method?
+  // This method shows the results found after the above function runs
   bookView.initSearchResultsPage = function() {
     resetView();
     $('.search-results').show();
     $('#search-list').empty();
 
-    // COMMENT: Explain how the .map() method is being used below.
+    // COMMENT-DONE: Explain how the .map() method is being used below.
+    // The map function maps over all books that were found in the search and renders them.
     module.Book.all.map(book => $('#search-list').append(book.toHtml()));
     $('.detail-button a').text('Add to list').attr('href', '/');
     $('.detail-button').on('click', function(e) {
-      // COMMENT: Explain the following line of code.
+      // COMMENT-DONE: Explain the following line of code.
+      // When detail button is clicked, this method finds the book id of the book that was selected and then initiates the create process and adds it to the database to be added to the user's book list
       module.Book.findOne($(this).parent().parent().parent().data('bookid'))
     });
   }
 
   // COMMENT: Explain the following line of code. 
+  // In modular code, all the code wrapped in this IIFE is now a property of the module
   module.bookView = bookView;
   
   // COMMENT: Explain the following line of code. 
+  // The app variable is passed as an argument and with the code above now has all the contents of bookView as a property/value
 })(app)
 
